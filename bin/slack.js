@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import getApp from '../server/index.js';
 
 const port = process.env.PORT || 5000;
