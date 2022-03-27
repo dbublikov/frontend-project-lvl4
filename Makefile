@@ -19,7 +19,7 @@ lint:#initializing linter
 	npx eslint . --ext js,jsx
 
 lintfix:#fixing linter
-	npx eslint . --fix 
+	npx eslint . --fix --ext js,jsx
 
 publish:
 	npm publish
