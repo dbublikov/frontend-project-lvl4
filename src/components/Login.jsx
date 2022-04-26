@@ -1,19 +1,60 @@
 /* eslint-disable import/no-unresolved */
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import axios from 'axios';
 
+import useAuth from '../hooks/index.js';
+import routes from '../routes.js';
 import FormContainer from './FormContainer';
 
 function Login() {
+  const auth = useAuth();
+  const [authFailed, setAuthFailed] = useState(false);
+
+  const usernameRef = useRef();
+  const history = useHistory();
+
+  useEffect(() => {
+    usernameRef.current.focus();
+  }, []);
+
+  // continues from here !!!
+
+  const handleSubmit = async (values) => {
+    const url = routes.login();
+
+    setAuthFailed(false);
+
+    try {
+      const res = await axios.post(url, { ...values });
+
+      localStorage.setItem('userId', JSON.stringify(res.data));
+      auth.logIn();
+
+      history.push('/');
+    } catch (e) {
+      if (e.isAxiosError && e.response.status === 401) {
+        setAuthFailed(true);
+        usernameRef.current.select();
+        return;
+      }
+      throw e;
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
-    onSubmit: () => {},
+    onSubmit: handleSubmit,
   });
+
+  if (auth.loggedIn) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <FormContainer>
@@ -28,6 +69,8 @@ function Login() {
             type="text"
             onChange={formik.handleChange}
             value={formik.values.username}
+            ref={usernameRef}
+            isInvalid={authFailed}
           />
         </Form.Group>
         <Form.Group>
@@ -40,7 +83,10 @@ function Login() {
             type="password"
             onChange={formik.handleChange}
             value={formik.values.password}
+            isInvalid={authFailed}
           />
+          {authFailed
+            && <Form.Control.Feedback type="invalid">Authentication failed!</Form.Control.Feedback>}
         </Form.Group>
         <Button
           type="submit"

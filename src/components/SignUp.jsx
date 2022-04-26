@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -29,6 +29,12 @@ function SignUp() {
     onSubmit: () => {},
   });
 
+  const usernameRef = useRef();
+
+  useEffect(() => {
+    usernameRef.current.focus();
+  }, []);
+
   return (
     <FormContainer>
       <Form className="p-3" onSubmit={formik.handleSubmit}>
@@ -43,6 +49,7 @@ function SignUp() {
             onChange={formik.handleChange}
             value={formik.values.username}
             isInvalid={formik.errors.username}
+            ref={usernameRef}
           />
           {formik.errors.username
             && <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>}
