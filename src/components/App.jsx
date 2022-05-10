@@ -13,7 +13,9 @@ import SignUp from './SignUp.jsx';
 import NotFound from './NotFound';
 
 function AuthProvider({ children }) {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const userId = JSON.parse(localStorage.getItem('userId'));
+  const [loggedIn, setLoggedIn] = useState(userId && userId.token);
+  console.log(localStorage)
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {

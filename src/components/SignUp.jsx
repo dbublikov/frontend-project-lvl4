@@ -1,9 +1,11 @@
 /* eslint-disable import/no-unresolved */
 import React, { useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
+import useAuth from '../hooks/index.js';
 import FormContainer from './FormContainer';
 
 const signUpSchema = yup.object().shape({
@@ -29,11 +31,17 @@ function SignUp() {
     onSubmit: () => {},
   });
 
+  const auth = useAuth();
+  const history = useHistory();
   const usernameRef = useRef();
 
   useEffect(() => {
     usernameRef.current.focus();
   }, []);
+
+  if (auth.loggedIn) {
+    history.push('/');
+  }
 
   return (
     <FormContainer>

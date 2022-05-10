@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -53,7 +53,7 @@ function Login() {
   });
 
   if (auth.loggedIn) {
-    return <Redirect to="/" />;
+    history.push('/');
   }
 
   return (
