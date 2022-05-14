@@ -6,6 +6,7 @@ import routes from '../routes.js';
 
 import { setInitialState } from '../slices/channelsInfoSlice.js';
 import Channels from './Channels.jsx';
+import Messages from './Messages.jsx';
 
 const getAuthorizationHeader = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -32,6 +33,7 @@ function Home() {
   return (
     <Row className="flex-grow-1 h-75 pb-3">
       <Channels />
+      <Messages />
     </Row>
   );
 }
