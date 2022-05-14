@@ -15,7 +15,7 @@ function AuthButton() {
 
 function AppNavbar() {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar className="mb-3" bg="light" expand="lg">
       <Link to="/" className="mr-auto navbar-brand">Home</Link>
       <Nav>
         <AuthButton />

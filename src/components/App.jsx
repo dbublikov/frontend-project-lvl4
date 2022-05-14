@@ -7,15 +7,15 @@ import authContext from '../contexts/index.js';
 import useAuth from '../hooks/index.js';
 
 import AppNavbar from './AppNavbar';
-import Home from './Home';
+import Chat from './Chat';
 import Login from './Login';
-import SignUp from './SignUp.jsx';
+import SignUp from './SignUp';
 import NotFound from './NotFound';
 
 function AuthProvider({ children }) {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const [loggedIn, setLoggedIn] = useState(userId && userId.token);
-  console.log(localStorage)
+  console.log(localStorage);
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -52,7 +52,7 @@ function App() {
           <AppNavbar />
           <Switch>
             <PrivateRoute exact path="/">
-              <Home />
+              <Chat />
             </PrivateRoute>
             <Route path="/login">
               <Login />
