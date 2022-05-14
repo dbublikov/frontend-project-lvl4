@@ -10,6 +10,44 @@ import {
 
 import { setCurrentChannelId } from '../slices/channelsInfoSlice.js';
 
+function IrremovableChannel({ name, buttonVariant, onClick }) {
+  return (
+    <Nav.Link
+      as={Button}
+      variant={buttonVariant}
+      block
+      className="mb-2 text-left"
+      onClick={onClick}
+    >
+      {name}
+    </Nav.Link>
+  );
+}
+
+function RemovableChannel({ name, buttonVariant, onClick }) {
+  return (
+    <Dropdown as={ButtonGroup} className="d-flex mb-2">
+      <Nav.Link
+        as={Button}
+        variant={buttonVariant}
+        onClick={onClick}
+        className="text-left flex-grow-1"
+      >
+        {name}
+      </Nav.Link>
+      <Dropdown.Toggle
+        split
+        variant={buttonVariant}
+        className="flex-grow-0"
+      />
+      <Dropdown.Menu>
+        <Dropdown.Item>Remove</Dropdown.Item>
+        <Dropdown.Item>Rename</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+}
+
 function Channels() {
   const { channels, currentChannelId } = useSelector((state) => state.channelsInfo);
   const dispatch = useDispatch();
@@ -20,40 +58,20 @@ function Channels() {
     dispatch(setCurrentChannelId({ id }));
   };
 
-  const renderIrremovable = ({ id, name }) => (
-    <Nav.Link
-      as={Button}
-      variant={getButtonVariant(id)}
-      block
-      className="mb-2 text-left"
-      onClick={handleClickChannel(id)}
-    >
-      {name}
-    </Nav.Link>
-  );
-
-  const renderRemovable = ({ id, name }) => (
-    <Dropdown as={ButtonGroup} className="d-flex mb-2">
-      <Button variant={getButtonVariant(id)} onClick={handleClickChannel(id)}>{name}</Button>
-      <Dropdown.Toggle
-        split
-        variant={getButtonVariant(id)}
-        className="flex-grow-0"
-      />
-      <Dropdown.Menu>
-        <Dropdown.Item>Remove</Dropdown.Item>
-        <Dropdown.Item>Rename</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
-
   const renderChannels = () => (
     <Nav variant="pills" fill className="flex-column">
-      {channels.map((channel) => (
-        <Nav.Item key={channel.id}>
-          {channel.removable ? renderRemovable(channel) : renderIrremovable(channel)}
-        </Nav.Item>
-      ))}
+      {channels.map(({ id, name, removable }) => {
+        const Channel = removable ? RemovableChannel : IrremovableChannel;
+        return (
+          <Nav.Item key={id}>
+            <Channel
+              name={name}
+              buttonVariant={getButtonVariant(id)}
+              onClick={handleClickChannel(id)}
+            />
+          </Nav.Item>
+        );
+      })}
     </Nav>
   );
 
