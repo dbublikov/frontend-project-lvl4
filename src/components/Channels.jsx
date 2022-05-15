@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap';
 
 import { setCurrentChannelId } from '../slices/channelsInfoSlice.js';
+import { openModal } from '../slices/modalSlice.js';
 
 function IrremovableChannel({ name, buttonVariant, onClick }) {
   return (
@@ -58,6 +59,10 @@ function Channels() {
     dispatch(setCurrentChannelId({ id }));
   };
 
+  const handleAddChannel = () => {
+    dispatch(openModal({ type: 'addChannel' }));
+  };
+
   const renderChannels = () => (
     <Nav variant="pills" fill className="flex-column">
       {channels.map(({ id, name, removable }) => {
@@ -79,7 +84,7 @@ function Channels() {
     <Col xs={3} className="border-right">
       <div className="d-flex mb-2">
         <span>Channels</span>
-        <Button variant="link" className="ml-auto p-0">+</Button>
+        <Button variant="link" className="ml-auto p-0" onClick={handleAddChannel}>+</Button>
       </div>
       {renderChannels()}
     </Col>

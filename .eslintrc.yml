@@ -31,6 +31,7 @@ settings:
 rules:
   import/extensions: 0
   react/prop-types: 0
+  react/function-component-definition: 0
   no-console: 0
   functional/no-conditional-statement: 0
   functional/no-expression-statement: 0
