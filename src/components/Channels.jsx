@@ -11,45 +11,43 @@ import {
 import { setCurrentChannelId } from '../slices/channelsInfoSlice.js';
 import { openModal } from '../slices/modalSlice.js';
 
-function IrremovableChannel({ name, buttonVariant, onClick }) {
-  return (
+const IrremovableChannel = ({ name, buttonVariant, onClick }) => (
+  <Nav.Link
+    as={Button}
+    variant={buttonVariant}
+    block
+    className="mb-2 text-left"
+    onClick={onClick}
+  >
+    {name}
+  </Nav.Link>
+);
+
+const RemovableChannel = ({
+  name, buttonVariant, onClick, onRemove,
+}) => (
+  <Dropdown as={ButtonGroup} className="d-flex mb-2">
     <Nav.Link
       as={Button}
       variant={buttonVariant}
-      block
-      className="mb-2 text-left"
       onClick={onClick}
+      className="text-left flex-grow-1"
     >
       {name}
     </Nav.Link>
-  );
-}
+    <Dropdown.Toggle
+      split
+      variant={buttonVariant}
+      className="flex-grow-0"
+    />
+    <Dropdown.Menu>
+      <Dropdown.Item onClick={onRemove}>Remove</Dropdown.Item>
+      <Dropdown.Item>Rename</Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown>
+);
 
-function RemovableChannel({ name, buttonVariant, onClick }) {
-  return (
-    <Dropdown as={ButtonGroup} className="d-flex mb-2">
-      <Nav.Link
-        as={Button}
-        variant={buttonVariant}
-        onClick={onClick}
-        className="text-left flex-grow-1"
-      >
-        {name}
-      </Nav.Link>
-      <Dropdown.Toggle
-        split
-        variant={buttonVariant}
-        className="flex-grow-0"
-      />
-      <Dropdown.Menu>
-        <Dropdown.Item>Remove</Dropdown.Item>
-        <Dropdown.Item>Rename</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
-}
-
-function Channels() {
+const Channels = () => {
   const { channels, currentChannelId } = useSelector((state) => state.channelsInfo);
   const dispatch = useDispatch();
 
@@ -63,6 +61,11 @@ function Channels() {
     dispatch(openModal({ type: 'addChannel' }));
   };
 
+  const handleRemoveChannel = (id) => () => {
+    const extra = { channelId: id };
+    dispatch(openModal({ type: 'removeChannel', extra }));
+  };
+
   const renderChannels = () => (
     <Nav variant="pills" fill className="flex-column">
       {channels.map(({ id, name, removable }) => {
@@ -73,6 +76,8 @@ function Channels() {
               name={name}
               buttonVariant={getButtonVariant(id)}
               onClick={handleClickChannel(id)}
+              // continues from here
+              onRemove={handleRemoveChannel(id)}
             />
           </Nav.Item>
         );
@@ -89,6 +94,6 @@ function Channels() {
       {renderChannels()}
     </Col>
   );
-}
+};
 
 export default Channels;
