@@ -1,8 +1,9 @@
 /* eslint-disable import/no-unresolved */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import authContext from '../contexts/index.js';
 import useAuth from '../hooks/index.js';
 
@@ -11,6 +12,7 @@ import Chat from './Chat';
 import Login from './Login';
 import SignUp from './SignUp';
 import NotFound from './NotFound';
+import { addMessage } from '../slices/messagesInfoSlice.js';
 
 function AuthProvider({ children }) {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -44,7 +46,15 @@ function PrivateRoute({ children, path, exact }) {
   );
 }
 
-function App() {
+function App({ socket }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      dispatch(addMessage({ message }));
+    });
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
@@ -52,7 +62,7 @@ function App() {
           <AppNavbar />
           <Switch>
             <PrivateRoute exact path="/">
-              <Chat />
+              <Chat socket={socket} />
             </PrivateRoute>
             <Route path="/login">
               <Login />

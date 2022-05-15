@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Col,
@@ -12,6 +12,8 @@ import * as yup from 'yup';
 const messageSchema = yup.object().shape({
   body: yup.string().required('errors.emptyField'),
 });
+
+const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
 
 function MessagesBox() {
   const { messages } = useSelector((state) => state.messagesInfo);
@@ -32,13 +34,29 @@ function MessagesBox() {
   );
 }
 
-function NewMessageForm() {
+function NewMessageForm({ socket }) {
+  const { currentChannelId } = useSelector((state) => state.channelsInfo);
+  const [state, setState] = useState('filling');
+  const inputRef = useRef();
+
   const formik = useFormik({
     initialValues: {
       body: '',
     },
     validationSchema: messageSchema,
-    onSubmit: () => {},
+    onSubmit: ({ body }) => {
+      setState('pending');
+
+      const message = { body, channelId: currentChannelId, username: getUsername() };
+      socket.emit('newMessage', message, ({ status }) => {
+        if (status === 'ok') {
+          setState('filling');
+
+          formik.resetForm();
+          inputRef.current.focus();
+        }
+      });
+    },
   });
 
   return (
@@ -51,24 +69,26 @@ function NewMessageForm() {
             onChange={formik.handleChange}
             value={formik.values.body}
             isInvalid={formik.errors.body}
+            readOnly={state === 'pending'}
+            ref={inputRef}
           />
           <InputGroup.Append>
-            <Button type="submit">Send</Button>
+            <Button type="submit" disabled={state === 'pending'}>Send</Button>
           </InputGroup.Append>
           {formik.errors.body
-            && <Form.Control.Feedback type="invalid">Fill this field!</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">Fill the field!</Form.Control.Feedback>}
         </InputGroup>
       </Form>
     </div>
   );
 }
 
-function Messages() {
+function Messages({ socket }) {
   return (
     <Col className="h-100">
       <div className="d-flex flex-column h-100">
         <MessagesBox />
-        <NewMessageForm />
+        <NewMessageForm socket={socket} />
       </div>
     </Col>
   );

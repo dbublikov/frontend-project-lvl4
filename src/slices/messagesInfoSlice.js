@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { setInitialState } from './channelsInfoSlice.js';
 
 const messagesInfoSlice = createSlice({
@@ -7,7 +6,11 @@ const messagesInfoSlice = createSlice({
   initialState: {
     messages: [],
   },
-  reducers: {},
+  reducers: {
+    addMessage: (state, { payload: { message } }) => {
+      state.messages.push(message);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(setInitialState, (state, { payload: { messages } }) => ({
       messages: [...messages],
@@ -15,4 +18,5 @@ const messagesInfoSlice = createSlice({
   },
 });
 
+export const { addMessage } = messagesInfoSlice.actions;
 export default messagesInfoSlice.reducer;

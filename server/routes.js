@@ -16,16 +16,16 @@ const buildState = (defaultState) => {
       { id: randomChannelId, name: 'random', removable: false },
     ],
 
-    // For testing purposes
+    // Users and messages added for testing purposes
     messages: [
       {
-        id: 3,
+        id: getNextId(),
         body: 'hey!',
         channelId: 1,
         username: 'admin',
       },
       {
-        id: 4,
+        id: getNextId(),
         body: 'hello there',
         channelId: 1,
         username: 'admin',
@@ -33,7 +33,8 @@ const buildState = (defaultState) => {
     ],
     currentChannelId: generalChannelId,
     users: [
-      { id: 1, username: 'admin', password: 'admin' },
+      { id: getNextId(), username: 'admin', password: 'admin' },
+      { id: getNextId(), username: 'guest', password: 'pass' },
     ],
   };
 
