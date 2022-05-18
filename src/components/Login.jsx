@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 
@@ -20,9 +20,8 @@ function Login() {
     usernameRef.current.focus();
   }, []);
 
-  // continues from here !!!
-
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(true);
     const url = routes.login();
 
     setAuthFailed(false);
@@ -41,6 +40,8 @@ function Login() {
         return;
       }
       throw e;
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -69,6 +70,7 @@ function Login() {
             type="text"
             onChange={formik.handleChange}
             value={formik.values.username}
+            readOnly={formik.isSubmitting}
             ref={usernameRef}
             isInvalid={authFailed}
           />
@@ -83,6 +85,7 @@ function Login() {
             type="password"
             onChange={formik.handleChange}
             value={formik.values.password}
+            readOnly={formik.isSubmitting}
             isInvalid={authFailed}
           />
           {authFailed
@@ -92,8 +95,11 @@ function Login() {
           type="submit"
           variant="outline-primary"
           className="w-100 mb-3"
+          disabled={formik.isSubmitting}
         >
-          Sign in
+          {formik.isSubmitting
+            && <Spinner className="mr-1" animation="border" size="sm" />}
+          Log in
         </Button>
         <div className="text-center">
           <span>
