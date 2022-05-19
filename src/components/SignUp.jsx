@@ -1,12 +1,14 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import * as yup from 'yup';
 
 import useAuth from '../hooks/index.js';
 import FormContainer from './FormContainer';
+import routes from '../routes.js';
 
 const signUpSchema = yup.object().shape({
   username: yup.string()
@@ -20,7 +22,13 @@ const signUpSchema = yup.object().shape({
     ], 'Пароли должны совпадать'),
 });
 
-function SignUp() {
+const SignUp = () => {
+  const [signUpFailed, setSignUpFailed] = useState(false);
+
+  const auth = useAuth();
+  const history = useHistory();
+  const usernameRef = useRef();
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -28,12 +36,27 @@ function SignUp() {
       confirmPassword: '',
     },
     validationSchema: signUpSchema,
-    onSubmit: () => {},
-  });
+    onSubmit: async ({ username, password }, { setSubmitting }) => {
+      setSubmitting(true);
 
-  const auth = useAuth();
-  const history = useHistory();
-  const usernameRef = useRef();
+      const url = routes.signup();
+
+      try {
+        const res = await axios.post(url, { username, password });
+        auth.logIn(res.data);
+
+        history.push('/');
+      } catch (e) {
+        if (e.isAxiosError && e.response.status === 409) {
+          setSubmitting(false);
+          setSignUpFailed(true);
+          return;
+        }
+
+        throw e;
+      }
+    },
+  });
 
   useEffect(() => {
     usernameRef.current.focus();
@@ -56,7 +79,8 @@ function SignUp() {
             placeholder="От 3 до 20 символов"
             onChange={formik.handleChange}
             value={formik.values.username}
-            isInvalid={formik.errors.username}
+            isInvalid={formik.errors.username || signUpFailed}
+            readOnly={formik.isSubmitting}
             ref={usernameRef}
           />
           {formik.errors.username
@@ -73,7 +97,8 @@ function SignUp() {
             placeholder="Не менее 6 символов"
             onChange={formik.handleChange}
             value={formik.values.password}
-            isInvalid={formik.errors.password}
+            isInvalid={formik.errors.username || signUpFailed}
+            readOnly={formik.isSubmitting}
           />
           {formik.errors.password
             && <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>}
@@ -89,15 +114,25 @@ function SignUp() {
             placeholder="Пароли должны совпадать"
             onChange={formik.handleChange}
             value={formik.values.confirmPassword}
-            isInvalid={formik.errors.confirmPassword}
+            isInvalid={formik.errors.username || signUpFailed}
+            readOnly={formik.isSubmitting}
           />
-          {formik.errors.confirmPassword
-            && <Form.Control.Feedback type="invalid">{formik.errors.confirmPassword}</Form.Control.Feedback>}
+          {signUpFailed
+            && <Form.Control.Feedback type="invalid">User exists</Form.Control.Feedback>}
         </Form.Group>
-        <Button type="submit" className="w-100" variant="outline-primary">Sign up</Button>
+        <Button
+          type="submit"
+          className="w-100"
+          variant="outline-primary"
+          disabled={formik.isSubmitting}
+        >
+          {formik.isSubmitting
+            && <Spinner className="mr-2" animation="border" size="sm" />}
+          Sign up
+        </Button>
       </Form>
     </FormContainer>
   );
-}
+};
 
 export default SignUp;
