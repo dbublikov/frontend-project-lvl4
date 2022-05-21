@@ -1,10 +1,51 @@
 import React from 'react';
-import { Navbar, Nav, Button } from 'react-bootstrap';
+import {
+  Navbar, Nav, Button, NavDropdown,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
 import useAuth from '../hooks/index.js';
+
+const languages = {
+  en: 'English',
+  ru: 'Русский',
+};
+
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+
+  const handleSwitchLanguage = (lang) => () => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+  };
+
+  const renderLanguages = () => (
+    <>
+      {Object.entries(languages).map(([lang, name]) => (
+        <NavDropdown.Item
+          key={_.uniqueId()}
+          active={lang === i18n.language}
+          onClick={handleSwitchLanguage(lang)}
+        >
+          {name}
+        </NavDropdown.Item>
+      ))}
+    </>
+  );
+
+  return (
+    <NavDropdown title={languages[i18n.language]}>
+      {renderLanguages()}
+    </NavDropdown>
+  );
+};
 
 const AuthSection = () => {
   const auth = useAuth();
+  const { t } = useTranslation();
+
   const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
 
   const renderSection = () => {
@@ -15,12 +56,12 @@ const AuthSection = () => {
             <b>{getUsername()}</b>
             &nbsp; |
           </Navbar.Text>
-          <Nav.Link onClick={auth.logOut}>Log Out</Nav.Link>
+          <Nav.Link onClick={auth.logOut}>{t('buttons.logOut')}</Nav.Link>
         </>
       );
     }
 
-    return <Button as={Link} to="/login">Log In</Button>;
+    return <Button as={Link} to="/login">{t('buttons.logIn')}</Button>;
   };
 
   return (
@@ -32,7 +73,10 @@ const AuthSection = () => {
 
 const AppNavbar = () => (
   <Navbar className="mb-3" bg="light">
-    <Link to="/" className="mr-auto navbar-brand">Home</Link>
+    <Link to="/" className="navbar-brand">Home</Link>
+    <Nav className="mr-auto">
+      <LanguageSwitcher />
+    </Nav>
     <Nav>
       <AuthSection />
     </Nav>
