@@ -5,6 +5,7 @@ import {
   Button,
   Spinner,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -17,6 +18,7 @@ const channelSchema = yup.object().shape({
 
 const AddChannelForm = ({ onHide, socket }) => {
   const nameRef = useRef();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -54,7 +56,7 @@ const AddChannelForm = ({ onHide, socket }) => {
           ref={nameRef}
         />
         {formik.errors.name
-          && <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>}
+          && <Form.Control.Feedback type="invalid">{t(formik.errors.name)}</Form.Control.Feedback>}
       </Form.Group>
       <div className="d-flex justify-content-end border-top pt-2">
         <Button
@@ -64,12 +66,12 @@ const AddChannelForm = ({ onHide, socket }) => {
           onClick={onHide}
           disabled={formik.isSubmitting}
         >
-          Cancel
+          {t('buttons.cancel')}
         </Button>
         <Button type="submit" disabled={formik.isSubmitting}>
           {formik.isSubmitting
             && <Spinner className="mr-1" animation="border" size="sm" />}
-          Send
+          {t('buttons.add')}
         </Button>
       </div>
     </Form>
@@ -78,6 +80,7 @@ const AddChannelForm = ({ onHide, socket }) => {
 
 const AddChannel = ({ onExited, socket }) => {
   const [show, setShow] = useState(true);
+  const { t } = useTranslation();
 
   const onHide = () => {
     setShow(false);
@@ -86,7 +89,7 @@ const AddChannel = ({ onExited, socket }) => {
   return (
     <Modal show={show} onHide={onHide} onExited={onExited}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Channel</Modal.Title>
+        <Modal.Title>{t('texts.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <AddChannelForm onHide={onHide} socket={socket} />

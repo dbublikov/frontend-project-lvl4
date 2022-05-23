@@ -73,7 +73,7 @@ const AuthSection = () => {
 
 const AppNavbar = () => (
   <Navbar className="mb-3" bg="light">
-    <Link to="/" className="navbar-brand">Home</Link>
+    <Link to="/" className="navbar-brand">Hexlet Chat</Link>
     <Nav className="mr-auto">
       <LanguageSwitcher />
     </Nav>

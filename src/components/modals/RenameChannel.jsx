@@ -6,6 +6,7 @@ import {
   Spinner,
 } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -18,7 +19,9 @@ const channelSchema = yup.object().shape({
 
 const RenameChannelForm = ({ onHide, socket }) => {
   const { channelId, name } = useSelector((state) => state.modal.extra);
+
   const nameRef = useRef();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -56,7 +59,7 @@ const RenameChannelForm = ({ onHide, socket }) => {
           ref={nameRef}
         />
         {formik.errors.name
-          && <Form.Control.Feedback type="invalid">{formik.errors.name}</Form.Control.Feedback>}
+          && <Form.Control.Feedback type="invalid">{t(formik.errors.name)}</Form.Control.Feedback>}
       </Form.Group>
       <div className="d-flex justify-content-end border-top pt-2">
         <Button
@@ -66,12 +69,12 @@ const RenameChannelForm = ({ onHide, socket }) => {
           onClick={onHide}
           disabled={formik.isSubmitting}
         >
-          Cancel
+          {t('buttons.cancel')}
         </Button>
         <Button type="submit" disabled={formik.isSubmitting}>
           {formik.isSubmitting
             && <Spinner className="mr-1" animation="border" size="sm" />}
-          Send
+          {t('buttons.rename')}
         </Button>
       </div>
     </Form>
@@ -80,6 +83,7 @@ const RenameChannelForm = ({ onHide, socket }) => {
 
 const RenameChannel = ({ onExited, socket }) => {
   const [show, setShow] = useState(true);
+  const { t } = useTranslation();
 
   const onHide = () => {
     setShow(false);
@@ -88,7 +92,7 @@ const RenameChannel = ({ onExited, socket }) => {
   return (
     <Modal show={show} onHide={onHide} onExited={onExited}>
       <Modal.Header closeButton>
-        <Modal.Title>Rename Channel</Modal.Title>
+        <Modal.Title>{t('texts.renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <RenameChannelForm onHide={onHide} socket={socket} />

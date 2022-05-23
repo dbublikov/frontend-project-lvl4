@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+
 import axios from 'axios';
 
 import useAuth from '../hooks/index.js';
@@ -12,6 +14,8 @@ import FormContainer from './FormContainer';
 function Login() {
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
+
+  const { t } = useTranslation();
 
   const usernameRef = useRef();
   const history = useHistory();
@@ -63,7 +67,7 @@ function Login() {
     <FormContainer>
       <Form className="p-3" onSubmit={formik.handleSubmit}>
         <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
+          <Form.Label htmlFor="username">{t('labels.yourNickname')}</Form.Label>
           <Form.Control
             name="username"
             id="username"
@@ -78,7 +82,7 @@ function Login() {
           />
         </Form.Group>
         <Form.Group>
-          <Form.Label htmlFor="password">Password</Form.Label>
+          <Form.Label htmlFor="password">{t('labels.password')}</Form.Label>
           <Form.Control
             name="password"
             id="password"
@@ -91,7 +95,7 @@ function Login() {
             isInvalid={authFailed}
           />
           {authFailed
-            && <Form.Control.Feedback type="invalid">Authentication failed!</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">{t('errors.authFailed')}</Form.Control.Feedback>}
         </Form.Group>
         <Button
           type="submit"
@@ -101,13 +105,13 @@ function Login() {
         >
           {formik.isSubmitting
             && <Spinner className="mr-1" animation="border" size="sm" />}
-          Log in
+          {t('buttons.logIn')}
         </Button>
         <div className="text-center">
           <span>
-            Нет аккаунта?
+            {t('texts.noAccount')}
             &nbsp;
-            <Link to="/signup">Регистрация</Link>
+            <Link to="/signup">{t('texts.registration')}</Link>
           </span>
         </div>
       </Form>

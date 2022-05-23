@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Col,
   Nav,
@@ -24,7 +25,7 @@ const IrremovableChannel = ({ name, buttonVariant, onClick }) => (
 );
 
 const RemovableChannel = ({
-  name, buttonVariant, onClick, onRemove, onRename,
+  name, buttonVariant, onClick, onRemove, onRename, t,
 }) => (
   <Dropdown as={ButtonGroup} className="d-flex mb-2">
     <Nav.Link
@@ -41,8 +42,8 @@ const RemovableChannel = ({
       className="flex-grow-0"
     />
     <Dropdown.Menu>
-      <Dropdown.Item onClick={onRemove}>Remove</Dropdown.Item>
-      <Dropdown.Item onClick={onRename}>Rename</Dropdown.Item>
+      <Dropdown.Item onClick={onRemove}>{t('buttons.remove')}</Dropdown.Item>
+      <Dropdown.Item onClick={onRename}>{t('buttons.rename')}</Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 );
@@ -50,6 +51,8 @@ const RemovableChannel = ({
 const Channels = () => {
   const { channels, currentChannelId } = useSelector((state) => state.channelsInfo);
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const getButtonVariant = (id) => (id === currentChannelId ? 'primary' : 'light');
 
@@ -83,6 +86,7 @@ const Channels = () => {
               onClick={handleClickChannel(id)}
               onRemove={handleRemoveChannel(id)}
               onRename={handleRenameChannel(id, name)}
+              t={t}
             />
           </Nav.Item>
         );
@@ -93,7 +97,7 @@ const Channels = () => {
   return (
     <Col xs={3} className="border-right">
       <div className="d-flex mb-2">
-        <span>Channels</span>
+        <span>{t('texts.channels')}</span>
         <Button variant="link" className="ml-auto p-0" onClick={handleAddChannel}>+</Button>
       </div>
       {renderChannels()}

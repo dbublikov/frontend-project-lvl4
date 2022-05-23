@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import * as yup from 'yup';
 
@@ -12,14 +13,14 @@ import routes from '../routes.js';
 
 const signUpSchema = yup.object().shape({
   username: yup.string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов'),
+    .min(3, 'errors.notInRange')
+    .max(20, 'errors.notInRange'),
   password: yup.string()
-    .min(6, 'Не менее 6 символов'),
+    .min(6, 'errors.passwordTooShort'),
   confirmPassword: yup.string()
     .oneOf([
       yup.ref('password'),
-    ], 'Пароли должны совпадать'),
+    ], 'errors.passwordsDontMatch'),
 });
 
 const SignUp = () => {
@@ -28,6 +29,7 @@ const SignUp = () => {
   const auth = useAuth();
   const history = useHistory();
   const usernameRef = useRef();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -50,10 +52,13 @@ const SignUp = () => {
         if (e.isAxiosError && e.response.status === 409) {
           setSubmitting(false);
           setSignUpFailed(true);
+          usernameRef.current.select();
           return;
         }
 
         throw e;
+      } finally {
+        setSubmitting(false);
       }
     },
   });
@@ -70,13 +75,13 @@ const SignUp = () => {
     <FormContainer>
       <Form className="p-3" onSubmit={formik.handleSubmit}>
         <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
+          <Form.Label htmlFor="username">{t('labels.username')}</Form.Label>
           <Form.Control
             name="username"
             id="username"
             autoComplete="username"
             required
-            placeholder="От 3 до 20 символов"
+            placeholder={t('placeholders.range')}
             onChange={formik.handleChange}
             value={formik.values.username}
             isInvalid={formik.errors.username || signUpFailed}
@@ -84,41 +89,43 @@ const SignUp = () => {
             ref={usernameRef}
           />
           {formik.errors.username
-            && <Form.Control.Feedback type="invalid">{formik.errors.username}</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">{t(formik.errors.username)}</Form.Control.Feedback>}
         </Form.Group>
         <Form.Group>
-          <Form.Label htmlFor="password">Password</Form.Label>
+          <Form.Label htmlFor="password">{t('labels.password')}</Form.Label>
           <Form.Control
             name="password"
             id="password"
             autoComplete="new-password"
             type="password"
             required
-            placeholder="Не менее 6 символов"
+            placeholder={t('placeholders.noShorterThan')}
             onChange={formik.handleChange}
             value={formik.values.password}
-            isInvalid={formik.errors.username || signUpFailed}
+            isInvalid={formik.errors.password || signUpFailed}
             readOnly={formik.isSubmitting}
           />
           {formik.errors.password
-            && <Form.Control.Feedback type="invalid">{formik.errors.password}</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">{t(formik.errors.password)}</Form.Control.Feedback>}
         </Form.Group>
         <Form.Group>
-          <Form.Label htmlFor="confirmPassword">Подтвердите пароль</Form.Label>
+          <Form.Label htmlFor="confirmPassword">{t('labels.confirmPassword')}</Form.Label>
           <Form.Control
             name="confirmPassword"
             id="confirmPassword"
             autoComplete="new-password"
             type="password"
             required
-            placeholder="Пароли должны совпадать"
+            placeholder={t('placeholders.passwordsMustMatch')}
             onChange={formik.handleChange}
             value={formik.values.confirmPassword}
-            isInvalid={formik.errors.username || signUpFailed}
+            isInvalid={formik.errors.confirmPassword || signUpFailed}
             readOnly={formik.isSubmitting}
           />
+          {formik.errors.confirmPassword
+            && <Form.Control.Feedback type="invalid">{t(formik.errors.confirmPassword)}</Form.Control.Feedback>}
           {signUpFailed
-            && <Form.Control.Feedback type="invalid">User exists</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">{t('errors.userExists')}</Form.Control.Feedback>}
         </Form.Group>
         <Button
           type="submit"
@@ -128,7 +135,7 @@ const SignUp = () => {
         >
           {formik.isSubmitting
             && <Spinner className="mr-2" animation="border" size="sm" />}
-          Sign up
+          {t('buttons.signUp')}
         </Button>
       </Form>
     </FormContainer>

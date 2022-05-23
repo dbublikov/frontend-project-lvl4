@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Modal, Button, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const RemoveChannel = ({ onExited, socket }) => {
   const [show, setShow] = useState(true);
   const [pending, setPending] = useState(false);
   const { channelId } = useSelector((state) => state.modal.extra);
+
+  const { t } = useTranslation();
 
   const onHide = () => {
     setShow(false);
@@ -24,9 +27,9 @@ const RemoveChannel = ({ onExited, socket }) => {
   return (
     <Modal show={show} onHide={onHide} onExited={onExited}>
       <Modal.Header closeButton>
-        <Modal.Title>Remove Channel</Modal.Title>
+        <Modal.Title>{t('texts.removeChannel')}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure?</Modal.Body>
+      <Modal.Body>{t('texts.areYouSure')}</Modal.Body>
       <Modal.Footer>
         <div>
           <Button
@@ -36,7 +39,7 @@ const RemoveChannel = ({ onExited, socket }) => {
             onClick={onHide}
             disabled={pending}
           >
-            Cancel
+            {t('buttons.cancel')}
           </Button>
           <Button
             type="button"
@@ -46,7 +49,7 @@ const RemoveChannel = ({ onExited, socket }) => {
           >
             {pending
               && <Spinner className="mr-1" animation="border" size="sm" />}
-            Remove
+            {t('buttons.remove')}
           </Button>
         </div>
       </Modal.Footer>

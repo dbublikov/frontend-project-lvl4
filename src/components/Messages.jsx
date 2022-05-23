@@ -7,6 +7,7 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 
 const messageSchema = yup.object().shape({
@@ -37,7 +38,9 @@ function MessagesBox() {
 function NewMessageForm({ socket }) {
   const { currentChannelId } = useSelector((state) => state.channelsInfo);
   const [state, setState] = useState('filling');
+
   const inputRef = useRef();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -73,10 +76,10 @@ function NewMessageForm({ socket }) {
             ref={inputRef}
           />
           <InputGroup.Append>
-            <Button type="submit" disabled={state === 'pending'}>Send</Button>
+            <Button type="submit" disabled={state === 'pending'}>{t('buttons.send')}</Button>
           </InputGroup.Append>
           {formik.errors.body
-            && <Form.Control.Feedback type="invalid">Fill the field!</Form.Control.Feedback>}
+            && <Form.Control.Feedback type="invalid">{t(formik.errors.body)}</Form.Control.Feedback>}
         </InputGroup>
       </Form>
     </div>
