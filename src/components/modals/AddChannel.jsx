@@ -7,14 +7,7 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
-
-const channelSchema = yup.object().shape({
-  name: yup.string()
-    .required('errors.emptyField')
-    .min(3, 'errors.notInRange')
-    .max(20, 'errors.notInRange'),
-});
+import { channelSchema } from '../../validationSchemes.js';
 
 const AddChannelForm = ({ onHide, socket }) => {
   const nameRef = useRef();

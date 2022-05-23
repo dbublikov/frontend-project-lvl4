@@ -8,11 +8,7 @@ import {
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import * as yup from 'yup';
-
-const messageSchema = yup.object().shape({
-  body: yup.string().required('errors.emptyField'),
-});
+import { messageSchema } from '../validationSchemes.js';
 
 const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
 

@@ -24,7 +24,7 @@ function Login() {
     usernameRef.current.focus();
   }, []);
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleLogIn = async (values, { setSubmitting }) => {
     setSubmitting(true);
     const url = routes.login();
 
@@ -32,9 +32,6 @@ function Login() {
 
     try {
       const res = await axios.post(url, { ...values });
-
-      // localStorage.setItem('userId', JSON.stringify(res.data));
-      // auth.logIn();
 
       auth.logIn(res.data);
 
@@ -56,7 +53,7 @@ function Login() {
       username: '',
       password: '',
     },
-    onSubmit: handleSubmit,
+    onSubmit: handleLogIn,
   });
 
   if (auth.loggedIn) {

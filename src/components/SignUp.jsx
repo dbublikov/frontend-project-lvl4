@@ -5,23 +5,11 @@ import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import * as yup from 'yup';
 
 import useAuth from '../hooks/index.js';
 import FormContainer from './FormContainer';
+import { signUpSchema } from '../validationSchemes.js';
 import routes from '../routes.js';
-
-const signUpSchema = yup.object().shape({
-  username: yup.string()
-    .min(3, 'errors.notInRange')
-    .max(20, 'errors.notInRange'),
-  password: yup.string()
-    .min(6, 'errors.passwordTooShort'),
-  confirmPassword: yup.string()
-    .oneOf([
-      yup.ref('password'),
-    ], 'errors.passwordsDontMatch'),
-});
 
 const SignUp = () => {
   const [signUpFailed, setSignUpFailed] = useState(false);
@@ -31,6 +19,30 @@ const SignUp = () => {
   const usernameRef = useRef();
   const { t } = useTranslation();
 
+  const handleSignUp = async ({ username, password }, { setSubmitting }) => {
+    setSubmitting(true);
+
+    const url = routes.signup();
+
+    try {
+      const res = await axios.post(url, { username, password });
+      auth.logIn(res.data);
+
+      history.push('/');
+    } catch (e) {
+      if (e.isAxiosError && e.response.status === 409) {
+        setSubmitting(false);
+        setSignUpFailed(true);
+        usernameRef.current.select();
+        return;
+      }
+
+      throw e;
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -38,29 +50,7 @@ const SignUp = () => {
       confirmPassword: '',
     },
     validationSchema: signUpSchema,
-    onSubmit: async ({ username, password }, { setSubmitting }) => {
-      setSubmitting(true);
-
-      const url = routes.signup();
-
-      try {
-        const res = await axios.post(url, { username, password });
-        auth.logIn(res.data);
-
-        history.push('/');
-      } catch (e) {
-        if (e.isAxiosError && e.response.status === 409) {
-          setSubmitting(false);
-          setSignUpFailed(true);
-          usernameRef.current.select();
-          return;
-        }
-
-        throw e;
-      } finally {
-        setSubmitting(false);
-      }
-    },
+    onSubmit: handleSignUp,
   });
 
   useEffect(() => {

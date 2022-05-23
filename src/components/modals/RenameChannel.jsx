@@ -8,14 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
-
-const channelSchema = yup.object().shape({
-  name: yup.string()
-    .required('errors.emptyField')
-    .min(3, 'errors.notInRange')
-    .max(20, 'errors.notInRange'),
-});
+import { channelSchema } from '../../validationSchemes.js';
 
 const RenameChannelForm = ({ onHide, socket }) => {
   const { channelId, name } = useSelector((state) => state.modal.extra);
