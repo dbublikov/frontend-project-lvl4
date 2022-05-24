@@ -5,11 +5,16 @@ import {
   Button,
   Spinner,
 } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
 import { channelSchema } from '../../validationSchemes.js';
 
 const AddChannelForm = ({ onHide, socket }) => {
+  const { channels } = useSelector((state) => state.channelsInfo);
+  const channelsNames = channels.map(({ name: channelName }) => channelName);
+
   const nameRef = useRef();
   const { t } = useTranslation();
 
@@ -17,7 +22,7 @@ const AddChannelForm = ({ onHide, socket }) => {
     initialValues: {
       name: '',
     },
-    validationSchema: channelSchema,
+    validationSchema: channelSchema(channelsNames),
     onSubmit: ({ name }, { setSubmitting }) => {
       setSubmitting(true);
 
@@ -26,6 +31,7 @@ const AddChannelForm = ({ onHide, socket }) => {
       socket.emit('newChannel', channel, ({ status }) => {
         if (status === 'ok') {
           onHide();
+          toast.success(t('toast.add'));
         }
       });
     },

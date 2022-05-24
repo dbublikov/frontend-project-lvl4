@@ -8,10 +8,14 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
 import { channelSchema } from '../../validationSchemes.js';
 
 const RenameChannelForm = ({ onHide, socket }) => {
   const { channelId, name } = useSelector((state) => state.modal.extra);
+
+  const { channels } = useSelector((state) => state.channelsInfo);
+  const channelsNames = channels.map(({ name: channelName }) => channelName);
 
   const nameRef = useRef();
   const { t } = useTranslation();
@@ -20,7 +24,7 @@ const RenameChannelForm = ({ onHide, socket }) => {
     initialValues: {
       name,
     },
-    validationSchema: channelSchema,
+    validationSchema: channelSchema(channelsNames),
     onSubmit: ({ name: newName }, { setSubmitting }) => {
       setSubmitting(true);
 
@@ -29,6 +33,7 @@ const RenameChannelForm = ({ onHide, socket }) => {
       socket.emit('renameChannel', channel, ({ status }) => {
         if (status === 'ok') {
           onHide();
+          toast.success(t('toast.rename'));
         }
       });
     },

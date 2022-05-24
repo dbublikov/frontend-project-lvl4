@@ -4,6 +4,8 @@ import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import authContext from '../contexts/index.js';
 import useAuth from '../hooks/index.js';
 import getModal from './modals/index.js';
@@ -91,6 +93,8 @@ function App({ socket }) {
       <Router>
         <div className="d-flex flex-column h-100">
           <AppNavbar />
+          <ToastContainer autoClose={3000} />
+
           <Switch>
             <PrivateRoute exact path="/">
               <Chat socket={socket} />

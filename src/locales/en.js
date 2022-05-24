@@ -23,6 +23,7 @@ export default {
       passwordsDontMatch: 'Passwords must match',
       emptyField: 'Fill this field',
       userExists: 'This user already exists',
+      uniq: 'The name must be uniq',
       netError: 'Network error, check your Internet connection',
       unknown: 'Something went wrong, try again',
     },
@@ -41,6 +42,11 @@ export default {
       removeChannel: 'Remove channel',
       renameChannel: 'Rename channel',
       areYouSure: 'Are you sure?',
+    },
+    toast: {
+      add: 'Channel created',
+      rename: 'Channel renamed',
+      remove: 'Channel removed',
     },
   },
 };

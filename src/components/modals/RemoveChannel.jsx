@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const RemoveChannel = ({ onExited, socket }) => {
   const [show, setShow] = useState(true);
@@ -20,6 +21,7 @@ const RemoveChannel = ({ onExited, socket }) => {
     socket.emit('removeChannel', { id: channelId }, ({ status }) => {
       if (status === 'ok') {
         onHide();
+        toast.success(t('toast.remove'));
       }
     });
   };

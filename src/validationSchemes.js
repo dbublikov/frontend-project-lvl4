@@ -17,10 +17,11 @@ export const messageSchema = yup.object().shape({
   body: yup.string().trim().required('errors.emptyField'),
 });
 
-export const channelSchema = yup.object().shape({
+export const channelSchema = (channelsNames) => yup.object().shape({
   name: yup.string()
     .trim()
     .required('errors.emptyField')
     .min(3, 'errors.notInRange')
-    .max(20, 'errors.notInRange'),
+    .max(20, 'errors.notInRange')
+    .notOneOf(channelsNames, 'errors.uniq'),
 });
