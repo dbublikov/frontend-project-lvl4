@@ -3,7 +3,7 @@ import { Row, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import routes from '../routes.js';
-import useAuth from '../hooks/index.js';
+import { useAuth, useSocket } from '../hooks/index.js';
 
 import { setInitialState } from '../slices/channelsInfoSlice.js';
 import Channels from './Channels.jsx';
@@ -21,9 +21,10 @@ const getAuthorizationHeader = () => {
   return {};
 };
 
-function Chat({ socket }) {
+const Chat = () => {
   const auth = useAuth();
   const dispatch = useDispatch();
+  const socket = useSocket();
 
   const [contentLoaded, setContentLoaded] = useState(false);
 
@@ -52,9 +53,9 @@ function Chat({ socket }) {
   return contentLoaded ? (
     <Row className="flex-grow-1 h-75 pb-3">
       <Channels />
-      <Messages socket={socket} />
+      <Messages />
     </Row>
   ) : <Spinner animation="grow" variant="primary" />;
-}
+};
 
 export default Chat;

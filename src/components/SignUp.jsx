@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
-import useAuth from '../hooks/index.js';
+import { useAuth } from '../hooks/index.js';
 import FormContainer from './FormContainer';
 import { signUpSchema } from '../validationSchemes.js';
 import routes from '../routes.js';

@@ -6,8 +6,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import authContext from '../contexts/index.js';
-import useAuth from '../hooks/index.js';
+
+import { authContext, socketContext } from '../contexts/index.js';
+import { useAuth } from '../hooks/index.js';
 import getModal from './modals/index.js';
 
 import AppNavbar from './AppNavbar';
@@ -17,14 +18,14 @@ import SignUp from './SignUp';
 import NotFound from './NotFound';
 import { closeModal } from '../slices/modalSlice.js';
 
-const renderModal = (type, socket, onExited) => {
+const renderModal = (type, onExited) => {
   if (!type) {
     return null;
   }
 
   const Modal = getModal(type);
 
-  return <Modal onExited={onExited} socket={socket} />;
+  return <Modal onExited={onExited} />;
 };
 
 const AuthProvider = ({ children }) => {
@@ -72,28 +73,30 @@ const App = ({ socket }) => {
 
   return (
     <AuthProvider>
-      <Router>
-        <div className="d-flex flex-column h-100">
-          <AppNavbar />
-          <ToastContainer autoClose={3000} />
+      <socketContext.Provider value={socket}>
+        <Router>
+          <div className="d-flex flex-column h-100">
+            <AppNavbar />
+            <ToastContainer autoClose={3000} />
 
-          <Switch>
-            <PrivateRoute exact path="/">
-              <Chat socket={socket} />
-            </PrivateRoute>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/signup">
-              <SignUp />
-            </Route>
-            <Route path="*">
-              <NotFound />
-            </Route>
-          </Switch>
-        </div>
-        {renderModal(type, socket, onModalExited)}
-      </Router>
+            <Switch>
+              <PrivateRoute exact path="/">
+                <Chat socket={socket} />
+              </PrivateRoute>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/signup">
+                <SignUp />
+              </Route>
+              <Route path="*">
+                <NotFound />
+              </Route>
+            </Switch>
+          </div>
+          {renderModal(type, onModalExited)}
+        </Router>
+      </socketContext.Provider>
     </AuthProvider>
   );
 };

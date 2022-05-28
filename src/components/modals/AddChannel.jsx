@@ -9,12 +9,15 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
+
+import { useSocket } from '../../hooks/index.js';
 import { channelSchema } from '../../validationSchemes.js';
 
-const AddChannelForm = ({ onHide, socket }) => {
+const AddChannelForm = ({ onHide }) => {
   const { channels } = useSelector((state) => state.channelsInfo);
   const channelsNames = channels.map(({ name: channelName }) => channelName);
 
+  const socket = useSocket();
   const nameRef = useRef();
   const { t } = useTranslation();
 
@@ -77,7 +80,7 @@ const AddChannelForm = ({ onHide, socket }) => {
   );
 };
 
-const AddChannel = ({ onExited, socket }) => {
+const AddChannel = ({ onExited }) => {
   const [show, setShow] = useState(true);
   const { t } = useTranslation();
 
@@ -91,7 +94,7 @@ const AddChannel = ({ onExited, socket }) => {
         <Modal.Title>{t('texts.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <AddChannelForm onHide={onHide} socket={socket} />
+        <AddChannelForm onHide={onHide} />
       </Modal.Body>
     </Modal>
   );

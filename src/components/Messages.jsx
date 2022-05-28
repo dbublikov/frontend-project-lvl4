@@ -9,10 +9,11 @@ import {
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { messageSchema } from '../validationSchemes.js';
+import { useSocket } from '../hooks/index.js';
 
 const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
 
-function MessagesBox() {
+const MessagesBox = () => {
   const { messages } = useSelector((state) => state.messagesInfo);
   const { currentChannelId } = useSelector((state) => state.channelsInfo);
 
@@ -29,12 +30,13 @@ function MessagesBox() {
         ))}
     </div>
   );
-}
+};
 
-function NewMessageForm({ socket }) {
+const NewMessageForm = () => {
   const { currentChannelId } = useSelector((state) => state.channelsInfo);
   const [state, setState] = useState('filling');
 
+  const socket = useSocket();
   const inputRef = useRef();
   const { t } = useTranslation();
 
@@ -80,17 +82,15 @@ function NewMessageForm({ socket }) {
       </Form>
     </div>
   );
-}
+};
 
-function Messages({ socket }) {
-  return (
-    <Col className="h-100">
-      <div className="d-flex flex-column h-100">
-        <MessagesBox />
-        <NewMessageForm socket={socket} />
-      </div>
-    </Col>
-  );
-}
+const Messages = () => (
+  <Col className="h-100">
+    <div className="d-flex flex-column h-100">
+      <MessagesBox />
+      <NewMessageForm />
+    </div>
+  </Col>
+);
 
 export default Messages;

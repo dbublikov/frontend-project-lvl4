@@ -3,12 +3,14 @@ import { Modal, Button, Spinner } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useSocket } from '../../hooks/index.js';
 
-const RemoveChannel = ({ onExited, socket }) => {
+const RemoveChannel = ({ onExited }) => {
   const [show, setShow] = useState(true);
   const [pending, setPending] = useState(false);
   const { channelId } = useSelector((state) => state.modal.extra);
 
+  const socket = useSocket();
   const { t } = useTranslation();
 
   const onHide = () => {
