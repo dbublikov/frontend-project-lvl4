@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "frontend-project-lvl4",
-  "main": "src/index.js",
+  "main": "src/init.jsx",
   "type": "module",
   "engines": {
     "node": "14.x"
