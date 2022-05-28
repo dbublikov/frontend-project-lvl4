@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
@@ -15,8 +15,6 @@ import Chat from './Chat';
 import Login from './Login';
 import SignUp from './SignUp';
 import NotFound from './NotFound';
-import { addMessage } from '../slices/messagesInfoSlice.js';
-import { addChannel, removeChannel, renameChannel } from '../slices/channelsInfoSlice.js';
 import { closeModal } from '../slices/modalSlice.js';
 
 const renderModal = (type, socket, onExited) => {
@@ -29,12 +27,11 @@ const renderModal = (type, socket, onExited) => {
   return <Modal onExited={onExited} socket={socket} />;
 };
 
-function AuthProvider({ children }) {
+const AuthProvider = ({ children }) => {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const [loggedIn, setLoggedIn] = useState(userId && userId.token);
   console.log(localStorage);
 
-  // const logIn = () => setLoggedIn(true);
   const logIn = (authData) => {
     localStorage.setItem('userId', JSON.stringify(authData));
     setLoggedIn(true);
@@ -49,9 +46,9 @@ function AuthProvider({ children }) {
       {children}
     </authContext.Provider>
   );
-}
+};
 
-function PrivateRoute({ children, path, exact }) {
+const PrivateRoute = ({ children, path, exact }) => {
   const auth = useAuth();
 
   return (
@@ -63,30 +60,15 @@ function PrivateRoute({ children, path, exact }) {
         : <Redirect to="/login" />)}
     />
   );
-}
+};
 
-function App({ socket }) {
+const App = ({ socket }) => {
   const { type } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
 
   const onModalExited = () => {
     dispatch(closeModal());
   };
-
-  useEffect(() => {
-    socket.on('newMessage', (message) => {
-      dispatch(addMessage({ message }));
-    });
-    socket.on('newChannel', (channel) => {
-      dispatch(addChannel({ channel }));
-    });
-    socket.on('removeChannel', ({ id }) => {
-      dispatch(removeChannel({ id }));
-    });
-    socket.on('renameChannel', ({ id, name }) => {
-      dispatch(renameChannel({ id, name }));
-    });
-  }, []);
 
   return (
     <AuthProvider>
@@ -114,6 +96,6 @@ function App({ socket }) {
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;
