@@ -9,13 +9,13 @@ import { setInitialState } from '../slices/channelsInfoSlice.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
 
-const getUserId = () => JSON.parse(localStorage.getItem('userId'));
+const getToken = () => localStorage.getItem('token');
 
 const getAuthorizationHeader = () => {
-  const userId = getUserId();
+  const token = getToken();
 
-  if (userId && userId.token) {
-    return { Authorization: `Bearer ${userId.token}` };
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
   }
 
   return {};
@@ -26,7 +26,7 @@ const Chat = () => {
   const dispatch = useDispatch();
   const socket = useSocket();
 
-  const [contentLoaded, setContentLoaded] = useState(false);
+  // const [contentLoaded, setContentLoaded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,25 +37,33 @@ const Chat = () => {
 
         dispatch(setInitialState(res.data));
 
-        socket.auth = { token: getUserId().token };
-        setContentLoaded(true);
+        socket.auth = { token: getToken() };
+        // setContentLoaded(true);
       } catch (e) {
-        if (e.isAxiosError && e.response.status === 401) {
-          auth.logOut();
-          return;
-        }
-        throw e;
+        // if (e.isAxiosError && e.response.status === 401) {
+        //   auth.logOut();
+        //   return;
+        // }
+        // throw e;
+        auth.logOut();
       }
     };
     fetchData();
-  }, []);
+  }, [getToken()]);
 
-  return contentLoaded ? (
+  // return contentLoaded ? (
+  //   <Row className="flex-grow-1 h-75 pb-3">
+  //     <Channels />
+  //     <Messages />
+  //   </Row>
+  // ) : <Spinner animation="grow" variant="primary" />;
+
+  return (
     <Row className="flex-grow-1 h-75 pb-3">
       <Channels />
       <Messages />
     </Row>
-  ) : <Spinner animation="grow" variant="primary" />;
+  );
 };
 
 export default Chat;

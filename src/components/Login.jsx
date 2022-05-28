@@ -21,6 +21,9 @@ function Login() {
   const history = useHistory();
 
   useEffect(() => {
+    if (auth.loggedIn) {
+      history.replace('/');
+    }
     usernameRef.current.focus();
   }, []);
 
@@ -35,16 +38,19 @@ function Login() {
 
       auth.logIn(res.data);
 
-      history.push('/');
+      history.replace('/');
     } catch (e) {
-      if (e.isAxiosError && e.response.status === 401) {
-        setAuthFailed(true);
-        usernameRef.current.select();
-        return;
-      }
-      throw e;
-    } finally {
+      // if (e.isAxiosError && e.response.status === 401) {
+      //   setAuthFailed(true);
+      //   usernameRef.current.select();
+      //   return;
+      // }
+      // throw e;
+
+      setAuthFailed(true);
       setSubmitting(false);
+      usernameRef.current.select();
+      console.log(e);
     }
   };
 
@@ -55,10 +61,6 @@ function Login() {
     },
     onSubmit: handleLogIn,
   });
-
-  if (auth.loggedIn) {
-    history.push('/');
-  }
 
   return (
     <FormContainer>

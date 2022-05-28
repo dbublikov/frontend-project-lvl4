@@ -29,16 +29,20 @@ const renderModal = (type, onExited) => {
 };
 
 const AuthProvider = ({ children }) => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
-  const [loggedIn, setLoggedIn] = useState(userId && userId.token);
+  const userToken = localStorage.getItem('token');
+  const [loggedIn, setLoggedIn] = useState(!!userToken);
+
   console.log(localStorage);
 
-  const logIn = (authData) => {
-    localStorage.setItem('userId', JSON.stringify(authData));
+  const logIn = ({ token, username }) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', username);
     setLoggedIn(true);
   };
+
   const logOut = () => {
-    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
     setLoggedIn(false);
   };
 
@@ -49,17 +53,13 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const PrivateRoute = ({ children, path, exact }) => {
-  const auth = useAuth();
+const PrivateRoute = ({ children, exact, path }) => {
+  const { loggedIn } = useAuth();
 
   return (
-    <Route
-      path={path}
-      exact={exact}
-      render={() => (auth.loggedIn
-        ? children
-        : <Redirect to="/login" />)}
-    />
+    <Route exact={exact} path={path}>
+      {loggedIn ? children : <Redirect to="/login" />}
+    </Route>
   );
 };
 
@@ -81,7 +81,7 @@ const App = ({ socket }) => {
 
             <Switch>
               <PrivateRoute exact path="/">
-                <Chat socket={socket} />
+                <Chat />
               </PrivateRoute>
               <Route path="/login">
                 <Login />

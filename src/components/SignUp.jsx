@@ -54,12 +54,11 @@ const SignUp = () => {
   });
 
   useEffect(() => {
+    if (auth.loggedIn) {
+      history.replace('/');
+    }
     usernameRef.current.focus();
   }, []);
-
-  if (auth.loggedIn) {
-    history.push('/');
-  }
 
   return (
     <FormContainer>

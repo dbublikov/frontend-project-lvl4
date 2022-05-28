@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { messageSchema } from '../validationSchemes.js';
 import { useSocket } from '../hooks/index.js';
 
-const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
+const getUsername = () => localStorage.getItem('username');
 
 const MessagesBox = () => {
   const { messages } = useSelector((state) => state.messagesInfo);

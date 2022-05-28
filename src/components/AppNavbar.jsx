@@ -46,14 +46,12 @@ const AuthSection = () => {
   const auth = useAuth();
   const { t } = useTranslation();
 
-  const getUsername = () => JSON.parse(localStorage.getItem('userId')).username;
-
   const renderSection = () => {
     if (auth.loggedIn) {
       return (
         <>
           <Navbar.Text>
-            <b>{getUsername()}</b>
+            <b>{localStorage.getItem('username')}</b>
             &nbsp; |
           </Navbar.Text>
           <Nav.Link onClick={auth.logOut}>{t('buttons.logOut')}</Nav.Link>
