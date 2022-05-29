@@ -8,6 +8,7 @@ import {
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
+import filter from 'leo-profanity';
 import { messageSchema } from '../validationSchemes.js';
 import { useSocket } from '../hooks/index.js';
 
@@ -38,6 +39,10 @@ const NewMessageForm = () => {
   const inputRef = useRef();
   const { t } = useTranslation();
 
+  filter.clearList();
+  filter.add(filter.getDictionary('en'));
+  filter.add(filter.getDictionary('ru'));
+
   const formik = useFormik({
     initialValues: {
       body: '',
@@ -46,7 +51,13 @@ const NewMessageForm = () => {
     onSubmit: ({ body }, { resetForm, setSubmitting }) => {
       setSubmitting(true);
 
-      const message = { body, channelId: currentChannelId, username: getUsername() };
+      const filteredMessage = filter.check(body) ? filter.clean(body) : body;
+
+      const message = {
+        body: filteredMessage,
+        channelId: currentChannelId,
+        username: getUsername(),
+      };
       socket.emit('newMessage', message, ({ status }) => {
         if (status === 'ok') {
           setSubmitting(false);
