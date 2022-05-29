@@ -23,8 +23,7 @@ const MessagesBox = () => {
         .filter(({ channelId }) => (Number(channelId) === currentChannelId))
         .map(({ id, body, username }) => (
           <div key={id} className="text-break">
-            <b>{username}</b>
-            :&nbsp;
+            <b>{`${username}: `}</b>
             {body}
           </div>
         ))}
@@ -65,7 +64,7 @@ const NewMessageForm = () => {
         <InputGroup hasValidation={formik.errors.body}>
           <Form.Control
             name="body"
-            aria-label="body"
+            aria-label="Новое сообщение"
             onChange={formik.handleChange}
             value={formik.values.body}
             isInvalid={formik.errors.body}
