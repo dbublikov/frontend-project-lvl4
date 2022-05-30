@@ -5,7 +5,7 @@
   "main": "src/init.jsx",
   "type": "module",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
     "test": "npx jest",
