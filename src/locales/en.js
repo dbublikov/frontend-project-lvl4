@@ -24,7 +24,7 @@ export default {
       emptyField: 'Fill this field',
       userExists: 'This user already exists',
       uniq: 'The name must be uniq',
-      netError: 'Network error, check your Internet connection',
+      netError: 'Network error',
       unknown: 'Something went wrong, try again',
     },
     placeholders: {
@@ -47,6 +47,7 @@ export default {
       add: 'Channel created',
       rename: 'Channel renamed',
       remove: 'Channel removed',
+      netError: 'Network error, check your Internet connection',
     },
   },
 };

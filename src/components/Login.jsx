@@ -4,21 +4,20 @@ import { Link, useHistory } from 'react-router-dom';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
-
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { useAuth } from '../hooks/index.js';
 import routes from '../routes.js';
 import FormContainer from './FormContainer';
 
-function Login() {
+const Login = () => {
+  const [error, setError] = useState(null);
+
   const auth = useAuth();
-  const [authFailed, setAuthFailed] = useState(false);
-
-  const { t } = useTranslation();
-
-  const usernameRef = useRef();
   const history = useHistory();
+  const usernameRef = useRef();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (auth.loggedIn) {
@@ -31,26 +30,27 @@ function Login() {
     setSubmitting(true);
     const url = routes.login();
 
-    setAuthFailed(false);
+    setError(null);
 
     try {
-      const res = await axios.post(url, { ...values });
+      const res = await axios.post(url, { ...values }, { timeout: 10000, timeoutErrorMessage: 'Network Error' });
 
       auth.logIn(res.data);
 
-      history.replace('/');
+      history.push('/');
     } catch (e) {
-      // if (e.isAxiosError && e.response.status === 401) {
-      //   setAuthFailed(true);
-      //   usernameRef.current.select();
-      //   return;
-      // }
-      // throw e;
+      if (e.isAxiosError && e.response && e.response.status === 401) {
+        setError('authFailed');
+        usernameRef.current.select();
+      } else if (e.isAxiosError && e.message === 'Network Error') {
+        setError('netError');
+        toast.error(t('toast.netError'));
+      } else {
+        setError('unknown');
+        console.error(e);
+      }
 
-      setAuthFailed(true);
       setSubmitting(false);
-      usernameRef.current.select();
-      console.log(e);
     }
   };
 
@@ -77,7 +77,7 @@ function Login() {
             value={formik.values.username}
             readOnly={formik.isSubmitting}
             ref={usernameRef}
-            isInvalid={authFailed}
+            isInvalid={!!error}
           />
         </Form.Group>
         <Form.Group>
@@ -91,10 +91,10 @@ function Login() {
             onChange={formik.handleChange}
             value={formik.values.password}
             readOnly={formik.isSubmitting}
-            isInvalid={authFailed}
+            isInvalid={!!error}
           />
-          {authFailed
-            && <Form.Control.Feedback type="invalid">{t('errors.authFailed')}</Form.Control.Feedback>}
+          {error
+            && <Form.Control.Feedback type="invalid">{t(`errors.${error}`)}</Form.Control.Feedback>}
         </Form.Group>
         <Button
           type="submit"
