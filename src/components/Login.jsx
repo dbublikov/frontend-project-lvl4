@@ -116,6 +116,6 @@ const Login = () => {
       </Form>
     </FormContainer>
   );
-}
+};
 
 export default Login;

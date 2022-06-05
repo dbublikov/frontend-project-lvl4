@@ -42,6 +42,7 @@ export default {
       removeChannel: 'Remove channel',
       renameChannel: 'Rename channel',
       areYouSure: 'Are you sure?',
+      pleasewait: 'Please wait...',
     },
     toast: {
       add: 'Channel created',

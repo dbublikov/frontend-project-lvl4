@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Spinner } from 'react-bootstrap';
+import { Row, Col, Spinner } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+
 import routes from '../routes.js';
 import { useAuth, useSocket } from '../hooks/index.js';
-
 import { setInitialState } from '../slices/channelsInfoSlice.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
@@ -25,8 +26,9 @@ const Chat = () => {
   const auth = useAuth();
   const dispatch = useDispatch();
   const socket = useSocket();
+  const { t } = useTranslation();
 
-  // const [contentLoaded, setContentLoaded] = useState(false);
+  const [contentLoaded, setContentLoaded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,30 +40,29 @@ const Chat = () => {
         dispatch(setInitialState(res.data));
 
         socket.auth = { token: getToken() };
-        // setContentLoaded(true);
+        setContentLoaded(true);
       } catch (e) {
-        // if (e.isAxiosError && e.response.status === 401) {
-        //   auth.logOut();
-        //   return;
-        // }
-        // throw e;
-        auth.logOut();
+        if (e.isAxiosError && e.response.status === 401) {
+          auth.logOut();
+          return;
+        }
+        throw e;
       }
     };
     fetchData();
-  }, [getToken()]);
+  }, []);
 
-  // return contentLoaded ? (
-  //   <Row className="flex-grow-1 h-75 pb-3">
-  //     <Channels />
-  //     <Messages />
-  //   </Row>
-  // ) : <Spinner animation="grow" variant="primary" />;
-
-  return (
+  return contentLoaded ? (
     <Row className="flex-grow-1 h-75 pb-3">
       <Channels />
       <Messages />
+    </Row>
+  ) : (
+    <Row className="align-items-center h-100">
+      <Col className="text-center">
+        <Spinner animation="grow" variant="primary" />
+        <p>{t('texts.pleasewait')}</p>
+      </Col>
     </Row>
   );
 };

@@ -42,6 +42,7 @@ export default {
       removeChannel: 'Удалить канал',
       renameChannel: 'Переименовать канал',
       areYouSure: 'Уверены?',
+      pleasewait: 'Пожалуйста, подождите...',
     },
     toast: {
       add: 'Канал создан',
