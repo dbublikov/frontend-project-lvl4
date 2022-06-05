@@ -8,7 +8,9 @@ import {
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
+
 import { messageSchema } from '../validationSchemes.js';
 import { useSocket } from '../hooks/index.js';
 
@@ -58,14 +60,22 @@ const NewMessageForm = () => {
         channelId: currentChannelId,
         username: getUsername(),
       };
-      socket.emit('newMessage', message, ({ status }) => {
-        if (status === 'ok') {
-          setSubmitting(false);
 
-          resetForm();
-          inputRef.current.focus();
-        }
-      });
+      if (socket.connected) {
+        socket.emit('newMessage', message, ({ status }) => {
+          if (status === 'ok') {
+            setSubmitting(false);
+
+            resetForm();
+            inputRef.current.focus();
+          }
+        });
+      } else {
+        setSubmitting(false);
+
+        inputRef.current.focus();
+        toast.error(t('toast.netError'));
+      }
     },
   });
 

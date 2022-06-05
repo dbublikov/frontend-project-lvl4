@@ -31,12 +31,16 @@ const AddChannelForm = ({ onHide }) => {
 
       const channel = { name };
 
-      socket.emit('newChannel', channel, ({ status }) => {
-        if (status === 'ok') {
-          onHide();
-          toast.success(t('toast.add'));
-        }
-      });
+      if (socket.connected) {
+        socket.emit('newChannel', channel, ({ status }) => {
+          if (status === 'ok') {
+            onHide();
+            toast.success(t('toast.add'));
+          }
+        });
+      } else {
+        toast.error(t('toast.netError'));
+      }
     },
   });
 

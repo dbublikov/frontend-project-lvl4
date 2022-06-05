@@ -20,12 +20,16 @@ const RemoveChannel = ({ onExited }) => {
   const handleRemoveChannel = () => {
     setPending(true);
 
-    socket.emit('removeChannel', { id: channelId }, ({ status }) => {
-      if (status === 'ok') {
-        onHide();
-        toast.success(t('toast.remove'));
-      }
-    });
+    if (socket.connected) {
+      socket.emit('removeChannel', { id: channelId }, ({ status }) => {
+        if (status === 'ok') {
+          onHide();
+          toast.success(t('toast.remove'));
+        }
+      });
+    } else {
+      toast.error(t('toast.netError'));
+    }
   };
 
   return (

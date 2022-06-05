@@ -33,12 +33,16 @@ const RenameChannelForm = ({ onHide }) => {
 
       const channel = { id: channelId, name: newName };
 
-      socket.emit('renameChannel', channel, ({ status }) => {
-        if (status === 'ok') {
-          onHide();
-          toast.success(t('toast.rename'));
-        }
-      });
+      if (socket.connected) {
+        socket.emit('renameChannel', channel, ({ status }) => {
+          if (status === 'ok') {
+            onHide();
+            toast.success(t('toast.rename'));
+          }
+        });
+      } else {
+        toast.error(t('toast.netError'));
+      }
     },
   });
 

@@ -30,4 +30,4 @@ deploy:
 test:
 	npm test -s
 
-.PHONY: test
+.PHONY: test 
