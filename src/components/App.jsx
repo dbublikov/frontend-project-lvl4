@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { authContext, socketContext } from '../contexts/index.js';
 import { useAuth } from '../hooks/index.js';

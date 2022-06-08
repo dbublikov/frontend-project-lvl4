@@ -1,8 +1,6 @@
-// @ts-check
-import 'core-js/stable/index.js';
-import 'regenerator-runtime/runtime.js';
 import ReactDOM from 'react-dom';
 
+import 'react-toastify/dist/ReactToastify.css';
 import '../assets/application.scss';
 import init from './init.jsx';
 
