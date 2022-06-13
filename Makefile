@@ -30,4 +30,7 @@ deploy:
 test:
 	npm test -s
 
+test-with-coverage:
+	npm test -- --coverage
+
 .PHONY: test 
