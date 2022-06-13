@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   BrowserRouter as Router, Switch, Route, Redirect,
 } from 'react-router-dom';
@@ -45,8 +45,10 @@ const AuthProvider = ({ children }) => {
     setLoggedIn(false);
   };
 
+  const value = useMemo(() => ({ loggedIn, logIn, logOut }), [loggedIn]);
+
   return (
-    <authContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <authContext.Provider value={value}>
       {children}
     </authContext.Provider>
   );

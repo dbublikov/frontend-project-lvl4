@@ -65,7 +65,7 @@ const SignUp = () => {
       history.replace('/');
     }
     usernameRef.current.focus();
-  }, []);
+  }, [auth.loggedIn, history]);
 
   return (
     <FormContainer>

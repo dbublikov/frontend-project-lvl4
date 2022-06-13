@@ -48,7 +48,7 @@ export default {
       add: 'Channel created',
       rename: 'Channel renamed',
       remove: 'Channel removed',
-      netError: 'Network error, check your Internet connection',
+      netError: 'Network error, check your internet connection',
     },
   },
 };
