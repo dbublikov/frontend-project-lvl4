@@ -1,36 +1,20 @@
-install: install-deps
+lint-frontend:
+	make -C frontend lint
 
-start:
-	heroku local -f Procfile.dev
+lintfix-frontend:
+	make -C frontend lintfix
 
-start-backend:
-	npx nodemon bin/slack.js
-
-start-frontend:
-	npx webpack serve
-
-install-deps:
+install:
 	npm ci
 
-build:
-	npm run build
+start-frontend:
+	make -C frontend start
 
-lint:#initializing linter
-	npx eslint . --ext js,jsx
-
-lintfix:#fixing linter
-	npx eslint . --fix --ext js,jsx
-
-publish:
-	npm publish
+start-backend:
+	npx start-server
 
 deploy:
-	git push heroku
+	git push heroku main
 
-test:
-	npm test -s
-
-test-with-coverage:
-	npm test -- --coverage
-
-.PHONY: test 
+start:
+	make start-backend & make start-frontend
