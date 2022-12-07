@@ -8,10 +8,17 @@ env:
   es2021: true
 
 extends:
+  - 'plugin:react/recommended'
+  - 'plugin:functional/external-recommended'
+  - 'plugin:functional/recommended'
+  - 'plugin:react-hooks/recommended'
+  - 'plugin:jest-dom/recommended'
+  - 'plugin:testing-library/react'
   - airbnb
-  - plugin:react/recommended
-  - plugin:functional/recommended
-  - plugin:react-hooks/recommended
+  # - airbnb
+  # - plugin:react/recommended
+  # - plugin:functional/recommended
+  # - plugin:react-hooks/recommended
 
 parserOptions:
   ecmaFeatures:
@@ -28,6 +35,8 @@ rules:
   import/no-unresolved: 0
   react/prop-types: 0
   no-console: 0
+  no-unused-vars: 1
+  no-param-reassign: 1
   react/react-in-jsx-scope: 0
   functional/no-conditional-statement: 0
   functional/no-expression-statement: 0
