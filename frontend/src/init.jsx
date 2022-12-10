@@ -10,11 +10,11 @@ import resources from './locales/index.js';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsInfoSlice.js';
 import { addMessage } from './slices/messagesInfoSlice.js';
 
-const init = (socketClient = io()) => {
+const init = async (socketClient = io()) => {
   const i18nInstance = i18n.createInstance();
   const lng = localStorage.getItem('lang') || 'ru';
 
-  i18nInstance
+  await i18nInstance
     .use(initReactI18next)
     .init({
       lng,

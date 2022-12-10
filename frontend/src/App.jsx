@@ -75,28 +75,32 @@ const App = ({ socket }) => {
   return (
     <AuthProvider>
       <socketContext.Provider value={socket}>
-        <Router>
-          <div className="d-flex flex-column h-100">
-            <AppNavbar />
-            <ToastContainer autoClose={3000} />
 
-            <Switch>
-              <PrivateRoute exact path="/">
-                <Chat />
-              </PrivateRoute>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/signup">
-                <SignUp />
-              </Route>
-              <Route path="*">
-                <NotFound />
-              </Route>
-            </Switch>
+        <Router>
+          <div className="container-lg h-100 p-3">
+            <div className="d-flex flex-column h-100">
+              <AppNavbar />
+              <ToastContainer autoClose={3000} />
+
+              <Switch>
+                <PrivateRoute exact path="/">
+                  <Chat />
+                </PrivateRoute>
+                <Route path="/login">
+                  <Login />
+                </Route>
+                <Route path="/signup">
+                  <SignUp />
+                </Route>
+                <Route path="*">
+                  <NotFound />
+                </Route>
+              </Switch>
+            </div>
+            {renderModal(type, onModalExited)}
           </div>
-          {renderModal(type, onModalExited)}
         </Router>
+
       </socketContext.Provider>
     </AuthProvider>
   );
