@@ -54,6 +54,7 @@ const AddChannelForm = ({ onHide }) => {
         <Form.Label htmlFor="name" className="sr-only">Имя канала</Form.Label>
         <Form.Control
           name="name"
+          id="name"
           className="mb-2"
           onChange={formik.handleChange}
           value={formik.values.name}
