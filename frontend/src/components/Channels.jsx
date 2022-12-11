@@ -20,6 +20,7 @@ const IrremovableChannel = ({ name, buttonVariant, onClick }) => (
     className="mb-2 text-left"
     onClick={onClick}
   >
+    <span className="me-1"># </span>
     {name}
   </Nav.Link>
 );
@@ -34,6 +35,7 @@ const RemovableChannel = ({
       onClick={onClick}
       className="text-left flex-grow-1"
     >
+      <span className="me-1"># </span>
       {name}
     </Nav.Link>
     <Dropdown.Toggle
