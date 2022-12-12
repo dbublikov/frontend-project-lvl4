@@ -42,7 +42,8 @@ const RemovableChannel = ({
       split
       variant={buttonVariant}
       className="flex-grow-0"
-      aria-label="Управление каналом"
+      id="Управление каналом"
+      // aria-label="Управление каналом"
     />
     <Dropdown.Menu data-testid="channel-dropdown-menu">
       <Dropdown.Item onClick={onRemove}>{t('buttons.remove')}</Dropdown.Item>
