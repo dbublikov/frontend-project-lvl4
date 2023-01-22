@@ -16,6 +16,7 @@ const messagesInfoSlice = createSlice({
       messages: [...messages],
     }));
     builder.addCase(removeChannel, (state, { payload: { id } }) => {
+      /* eslint-disable no-param-reassign */
       state.messages = state.messages.filter(({ channelId }) => (channelId !== id));
     });
   },

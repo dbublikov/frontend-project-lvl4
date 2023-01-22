@@ -12,6 +12,7 @@ const channelsInfoSlice = createSlice({
       currentChannelId,
     }),
     setCurrentChannelId: (state, { payload: { id } }) => {
+      /* eslint-disable no-param-reassign */
       state.currentChannelId = id;
     },
     addChannel: (state, { payload: { channel } }) => {
