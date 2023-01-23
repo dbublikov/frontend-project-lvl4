@@ -6,4 +6,4 @@
 
 This is a simplified version of Slack Chat. You can use an account with the username "admin" and password "admin" to access the chat without signing up.
 
-### [View the project deployed](https://dbublikov-project4.up.railway.app/)
+### [View the project deployed](https://frontend-project-lvl4-production-79f6.up.railway.app/)
